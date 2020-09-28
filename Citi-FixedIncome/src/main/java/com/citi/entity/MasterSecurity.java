@@ -25,22 +25,22 @@ public class MasterSecurity {
 	@Column(name = "Isin", nullable = false)
 	String isin;
 	
-	@Column(nullable = false)
+	@Column(name = "security", nullable = false)
 	String security;
 	
-	@Column(nullable = false)
+	@Column(name = "issuer_name", nullable = false)
 	String issuerName;
 	
-	@Column(nullable = false)
+	@Column(name = "face_value", nullable = false)
 	double faceValue;
 	
-	@Column(nullable = false)
+	@Column(name = "day_count_convention", nullable = false)
 	String dayCountConvention;
 	
-	@Column(nullable = false)
+	@Column(name = "maturity_date", nullable = false)
 	String maturityDate;
 	
-	@Column(nullable = false)
+	@Column(name = "coupon_rate", nullable = false)
 	double couponRate;
 
 	public String getIsin() {

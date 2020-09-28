@@ -71,7 +71,11 @@ public class TradeService {
 		tradeRepository.deleteAll();
 		insertRandomTrades();
 		generateMarketPrices();
-		
+		Iterable<MasterSecurity> masterSecurityList = masterSecurityRepository.findAll();
+		return getTradeDTOListFromTrade();
+	}
+	
+	private List<GetTradeDTO> getTradeDTOListFromTrade() {
 		logger.info("++++++++++++++++++++++++++ In Trade Service +++++++++++++++++++++++++ ");
 		Iterable<Trade> tradesList = tradeRepository.findAll();
 		
@@ -84,6 +88,7 @@ public class TradeService {
 			getTradeDTO.setPrice(savedTrade.getPrice());
 			getTradeDTO.setQuantity(savedTrade.getQuantity());
 			getTradeDTO.setBuy(savedTrade.isBuy());
+			
 			//To depend on MasterSecurity
 			getTradeDTO.setSecurity(Security.Treasury_Bills);
 			getTradeDTO.setIsin("ISIN12345678");
@@ -91,20 +96,19 @@ public class TradeService {
 			finalTradeList.add(getTradeDTO);
 		}
 		return finalTradeList;
+		
 	}
-	
+
 	private void generateMarketPrices() {
 		Random random = new Random();
-		int numberOfRates = 10;
-		//int numberOfRates = masterSecurityRepository.count();
-		while(numberOfRates > 0) {
+		marketPriceRepository.deleteAll();
+		Iterable<MasterSecurity> masterSecurityList = masterSecurityRepository.findAll();
+		for(MasterSecurity masterSecurity : masterSecurityList) {
 			MarketPrice marketPrice = new MarketPrice();
-			marketPrice.setIsin(Integer.toString(numberOfRates));
-			//Make it foreign key mapping
-			marketPrice.setMarketPrice(90 + random.nextDouble());
-			//Consider FaceValue too
+			marketPrice.setIsin(masterSecurity.getIsin());
+			System.out.println(masterSecurity.getIssuerName());
+			marketPrice.setMarketPrice(masterSecurity.getFaceValue() + random.nextInt(5) - random.nextInt(5) + random.nextDouble());
 			marketPriceRepository.save(marketPrice);
-			numberOfRates--;
 		}
 		
 //		System.out.println("JUST TEST ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");

@@ -2,6 +2,7 @@ package com.citi.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,13 +11,13 @@ import javax.persistence.Table;
 public class CouponInfo {
 	
 	@Id
-	@Column(nullable = false)
+	@Column(name = "id", nullable = false)
 	int id;
 	
-	@Column(nullable = false)
+	@Column(name= "isin", nullable = false)
 	String isin;
 	
-	@Column(nullable = false)
+	@Column(name = "coupon_dates", nullable = false)
 	String couponDates;
 
 	public int getId() {
