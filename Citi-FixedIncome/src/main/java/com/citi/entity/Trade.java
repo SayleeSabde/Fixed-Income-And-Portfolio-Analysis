@@ -4,26 +4,29 @@
 package com.citi.entity;
 import java.util.Date;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+//import javax.persistence.ManyToOne;
 
 import org.springframework.format.annotation.DateTimeFormat;
+//import com.citi.entity.MasterSecurity;
 
-import com.citi.entity.MasterSecurity;
+
 @Entity
 public class Trade {
+	
 	@Column(nullable = false)
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int tradeId;
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private Date tradeDate;
 	
 	@Column(nullable = false)
@@ -35,14 +38,14 @@ public class Trade {
 	private int quantity;
 	
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	private boolean buy;
 	
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	//many-to-one is used for establishing foreign key relationships
-	@Column(nullable = false)
-    @ManyToOne				
-    private MasterSecurity masterSecurity;
+//	@GeneratedValue(strategy=GenerationType.AUTO)
+//	//many-to-one is used for establishing foreign key relationships
+//	@Column(nullable = false)
+//    //@ManyToOne				
+//    private MasterSecurity masterSecurity;
 	
 	
 	public int getTradeId() {
@@ -75,11 +78,11 @@ public class Trade {
 	public void setBuy(boolean buy) {
 		this.buy = buy;
 	}
-	public MasterSecurity getMasterSecurity() {
-		return masterSecurity;
-	}
-	public void setMasterSecurity(MasterSecurity masterSecurity) {
-		this.masterSecurity = masterSecurity;
-	}
+//	public MasterSecurity getMasterSecurity() {
+//		return masterSecurity;
+//	}
+//	public void setMasterSecurity(MasterSecurity masterSecurity) {
+//		this.masterSecurity = masterSecurity;
+//	}
 
 }

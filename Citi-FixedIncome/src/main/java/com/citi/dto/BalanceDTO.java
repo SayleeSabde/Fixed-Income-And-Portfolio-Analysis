@@ -1,17 +1,17 @@
 package com.citi.dto;
 
-public class BalancedDTO {
+public class BalanceDTO {
 	
 	private double couponAccrued;
 	private double realisedYield;
 	private double unrealisedYield;
 	private double closingFundBalance;
 	
-	public BalancedDTO() {
+	public BalanceDTO() {
 		
 	}
 	
-	public BalancedDTO(double couponAccrued, double realisedYield, double unrealisedYield,
+	public BalanceDTO(double couponAccrued, double realisedYield, double unrealisedYield,
 			double closingFundBalance) {
 		super();
 		this.couponAccrued = couponAccrued;
