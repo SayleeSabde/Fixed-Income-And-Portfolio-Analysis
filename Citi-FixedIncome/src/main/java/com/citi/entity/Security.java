@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.citi.repository;
+package com.citi.entity;
 
 /**
  * @author Dhruv
