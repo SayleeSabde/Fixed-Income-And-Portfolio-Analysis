@@ -21,7 +21,7 @@ public class Trade {
 	
 	@Column(nullable = false)
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int tradeId;
 	
 	//@Column(nullable = false)
@@ -29,7 +29,7 @@ public class Trade {
 	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private Date tradeDate;
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private double price;
 	
@@ -37,7 +37,7 @@ public class Trade {
 	@Column(nullable = false)
 	private int quantity;
 	
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
 	//@Column(nullable = false)
 	private boolean buy;
 	

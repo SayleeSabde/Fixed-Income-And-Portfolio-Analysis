@@ -4,7 +4,9 @@
 package com.citi.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +41,9 @@ public class TradeService {
 	}
 
 	@Transactional
-	public Iterable<GetTradeDTO> dummyGet() {
-		
-//		Trade trade =new Trade();
-//		trade.setQuantity(10);
-//		tradeRepository.save(trade);
+	public Iterable<GetTradeDTO> generateNewTrades() {
+		tradeRepository.deleteAll();
+		insertRandomTrades();
 		
 		logger.info("++++++++++++++++++++++++++ In Trade Service +++++++++++++++++++++++++ ");
 		Iterable<Trade> tradesList = tradeRepository.findAll();
@@ -65,30 +65,19 @@ public class TradeService {
 		}
 		return finalTradeList;
 	}
-	
-//	@Transactional
-//	public GetTradeDTO dummySave() {
-//		
-//		logger.debug("+++++++++++++++++++++++In Trade Service++++++++++++++++++++++++++++++++");
-//		
-//		Trade trade =new Trade();
-//		trade.setQuantity(10);
-//		Trade savedTrade = tradeRepository.save(trade);
-//		GetTradeDTO getTradeDTO = new GetTradeDTO();
-//		getTradeDTO.setTradeId(savedTrade.getTradeId());
-//		getTradeDTO.setTradeDate(savedTrade.getTradeDate());
-//		getTradeDTO.setPrice(savedTrade.getPrice());
-//		getTradeDTO.setQuantity(savedTrade.getQuantity());
-//		getTradeDTO.setBuy(savedTrade.isBuy());
-//		
-//		//To depend on MasterSecurity
-//		getTradeDTO.setSecurity(Security.Treasury_Bill);
-//		getTradeDTO.setIsin("ISIN12345678");
-//		getTradeDTO.setIssuerName("issuerName");
-//		
-//		return getTradeDTO;
+
+	private void insertRandomTrades() {
 		
-//	}
-	
+		Random random = new Random();
+		int numberOfTrades = 50 + random.nextInt(25);
+		
+		while(numberOfTrades > 0) {
+			Trade trade = new Trade();
+			trade.setQuantity(10);
+			trade.setTradeDate(new Date());
+			tradeRepository.save(trade);
+			numberOfTrades--;
+		}
+	}
 
 }
