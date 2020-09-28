@@ -15,109 +15,89 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 //import javax.validation.constraints.Size;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "mastersecurity")
 public class MasterSecurity {
-	@Id
-	@Column(nullable = false)
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int masterSecurityId;
-	//Annotation for enum
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)Security security;
-	private String issuerName;
-	@Column(length = 12,nullable=false)
-	//@Size(min = 12, max = 12)
-	private String isin;
-	@Column(nullable = false)
-	private double price;
-	@Column(nullable = false)
-	private int quantity;
-	@Column(nullable = false)
-	private boolean buy;
-	@Column(nullable = false)
-	private double faceValue;
-	@Column(nullable = false)
-	private double couponRate;
-    @ElementCollection  
-    @Column(nullable = false)
-	private List<Date> couponDates = new ArrayList<Date>();
-    @Enumerated(EnumType.STRING)DayCountConvention dayCountConvention;
-    @Column(nullable = false)
-	Date maturityDate;
 	
-	public int getMasterSecurityId() {
-		return masterSecurityId;
-	}
-	public void setMasterSecurityId(int masterSecurityId) {
-		this.masterSecurityId = masterSecurityId;
-	}
-	public Security getSecurity() {
-		return security;
-	}
-	public void setSecurity(Security security) {
-		this.security = security;
-	}
-	public String getIssuerName() {
-		return issuerName;
-	}
-	public void setIssuerName(String issuerName) {
-		this.issuerName = issuerName;
-	}
+	@Id
+	@Column(name = "Isin", nullable = false)
+	String isin;
+	
+	@Column(nullable = false)
+	String security;
+	
+	@Column(nullable = false)
+	String issuerName;
+	
+	@Column(nullable = false)
+	double faceValue;
+	
+	@Column(nullable = false)
+	String dayCountConvention;
+	
+	@Column(nullable = false)
+	String maturityDate;
+	
+	@Column(nullable = false)
+	double couponRate;
+
 	public String getIsin() {
 		return isin;
 	}
+
 	public void setIsin(String isin) {
 		this.isin = isin;
 	}
-	public double getPrice() {
-		return price;
+
+	public String getSecurity() {
+		return security;
 	}
-	public void setPrice(double price) {
-		this.price = price;
+
+	public void setSecurity(String security) {
+		this.security = security;
 	}
-	public int getQuantity() {
-		return quantity;
+
+	public String getIssuerName() {
+		return issuerName;
 	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+
+	public void setIssuerName(String issuerName) {
+		this.issuerName = issuerName;
 	}
-	public boolean isBuy() {
-		return buy;
-	}
-	public void setBuy(boolean buy) {
-		this.buy = buy;
-	}
+
 	public double getFaceValue() {
 		return faceValue;
 	}
+
 	public void setFaceValue(double faceValue) {
 		this.faceValue = faceValue;
 	}
+
+	public String getDayCountConvention() {
+		return dayCountConvention;
+	}
+
+	public void setDayCountConvention(String dayCountConvention) {
+		this.dayCountConvention = dayCountConvention;
+	}
+
+	
+	public String getMaturityDate() {
+		return maturityDate;
+	}
+
+	public void setMaturityDate(String maturityDate) {
+		this.maturityDate = maturityDate;
+	}
+
 	public double getCouponRate() {
 		return couponRate;
 	}
+
 	public void setCouponRate(double couponRate) {
 		this.couponRate = couponRate;
 	}
-	public List<Date> getCouponDates() {
-		return couponDates;
-	}
-	public void setCouponDates(List<Date> couponDates) {
-		this.couponDates = couponDates;
-	}
-	public DayCountConvention getDayCountConvention() {
-		return dayCountConvention;
-	}
-	public void setDayCountConvention(DayCountConvention dayCountConvention) {
-		this.dayCountConvention = dayCountConvention;
-	}
-	public Date getMaturityDate() {
-		return maturityDate;
-	}
-	public void setMaturityDate(Date maturityDate) {
-		this.maturityDate = maturityDate;
-	}
-	
 	
 }

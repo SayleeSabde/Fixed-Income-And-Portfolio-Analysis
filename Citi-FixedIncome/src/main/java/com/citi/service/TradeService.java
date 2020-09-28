@@ -17,8 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.citi.controller.TradeController;
 import com.citi.dto.GetTradeDTO;
+import com.citi.entity.CouponInfo;
+import com.citi.entity.MarketPrice;
+import com.citi.entity.MasterSecurity;
 import com.citi.entity.Security;
 import com.citi.entity.Trade;
+import com.citi.repository.CouponInfoRepository;
+import com.citi.repository.MarketPriceRepository;
+import com.citi.repository.MasterSecurityRepository;
 import com.citi.repository.TradeRepository;
 
 /**
@@ -33,6 +39,16 @@ public class TradeService {
 	@Autowired
 	TradeRepository tradeRepository;
 	
+	@Autowired
+	MarketPriceRepository marketPriceRepository;
+	
+	@Autowired 
+	MasterSecurityRepository masterSecurityRepository;
+	
+	@Autowired 
+	CouponInfoRepository couponInfoRepository;
+	
+	
 	public TradeRepository getTradeRepository() {
 		return tradeRepository;
 	}
@@ -41,10 +57,20 @@ public class TradeService {
 		this.tradeRepository = tradeRepository;
 	}
 
+	public MarketPriceRepository getMarketPriceRepository() {
+		return marketPriceRepository;
+	}
+
+	public void setMarketPriceRepository(MarketPriceRepository marketPriceRepository) {
+		this.marketPriceRepository = marketPriceRepository;
+	}
+
 	@Transactional
 	public Iterable<GetTradeDTO> generateNewTrades() {
+		
 		tradeRepository.deleteAll();
 		insertRandomTrades();
+		generateMarketPrices();
 		
 		logger.info("++++++++++++++++++++++++++ In Trade Service +++++++++++++++++++++++++ ");
 		Iterable<Trade> tradesList = tradeRepository.findAll();
@@ -59,14 +85,43 @@ public class TradeService {
 			getTradeDTO.setQuantity(savedTrade.getQuantity());
 			getTradeDTO.setBuy(savedTrade.isBuy());
 			//To depend on MasterSecurity
-			getTradeDTO.setSecurity(Security.Treasury_Bill);
+			getTradeDTO.setSecurity(Security.Treasury_Bills);
 			getTradeDTO.setIsin("ISIN12345678");
 			getTradeDTO.setIssuerName("issuerName");
 			finalTradeList.add(getTradeDTO);
 		}
 		return finalTradeList;
 	}
+	
+	private void generateMarketPrices() {
+		Random random = new Random();
+		int numberOfRates = 10;
+		//int numberOfRates = masterSecurityRepository.count();
+		while(numberOfRates > 0) {
+			MarketPrice marketPrice = new MarketPrice();
+			marketPrice.setIsin(Integer.toString(numberOfRates));
+			//Make it foreign key mapping
+			marketPrice.setMarketPrice(90 + random.nextDouble());
+			//Consider FaceValue too
+			marketPriceRepository.save(marketPrice);
+			numberOfRates--;
+		}
+		
+//		System.out.println("JUST TEST ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		Iterable<MasterSecurity> slist = masterSecurityRepository.findAll();
+//		for (MasterSecurity s : slist) {
+//			System.out.println(s.getIsin());
+//		}
+//		
+//		System.out.println("JUST COUPON ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		 Iterable<CouponInfo> clist = couponInfoRepository.findAll();
+//		for (CouponInfo c : clist) {
+//			System.out.println(c.getIsin());
+//		}
+		
+	}
 
+	@Transactional
 	private void insertRandomTrades() {
 		
 		Random random = new Random();
@@ -81,5 +136,7 @@ public class TradeService {
 			numberOfTrades--;
 		}
 	}
+	
+	
 
 }

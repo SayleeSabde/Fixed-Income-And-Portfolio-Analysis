@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.citi.entity.Trade;
 
 @Repository
-public interface TradeRepository extends CrudRepository<Trade, Integer> {
+public interface TradeRepository extends CrudRepository<Trade, String> {
 
 }
