@@ -3,12 +3,10 @@
  */
 package com.citi.entity;
 import java.util.Date;
-
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 //import javax.persistence.ManyToOne;
 
@@ -21,16 +19,20 @@ public class Trade {
 	
 	@Column(nullable = false)
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private int tradeId;
+	private String tradeId;
 	
-	//@Column(nullable = false)
+	public Trade() {
+		super();
+		this.tradeId = UUID.randomUUID().toString();
+	}
+	
+	@Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
 	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private Date tradeDate;
 	
-	//@Column(nullable = false)
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(nullable = false)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private double price;
 	
 	//@GeneratedValue(strategy=GenerationType.AUTO)
@@ -38,7 +40,7 @@ public class Trade {
 	private int quantity;
 	
 	//@GeneratedValue(strategy=GenerationType.AUTO)
-	//@Column(nullable = false)
+	@Column(nullable = false)
 	private boolean buy;
 	
 //	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -48,10 +50,10 @@ public class Trade {
 //    private MasterSecurity masterSecurity;
 	
 	
-	public int getTradeId() {
+	public String getTradeId() {
 		return tradeId;
 	}
-	public void setTradeId(int tradeId) {
+	public void setTradeId(String tradeId) {
 		this.tradeId = tradeId;
 	}
 	public Date getTradeDate() {

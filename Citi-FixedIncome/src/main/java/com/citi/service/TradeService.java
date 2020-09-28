@@ -3,6 +3,7 @@
  */
 package com.citi.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,11 +48,11 @@ public class TradeService {
 		
 		logger.info("++++++++++++++++++++++++++ In Trade Service +++++++++++++++++++++++++ ");
 		Iterable<Trade> tradesList = tradeRepository.findAll();
-		GetTradeDTO getTradeDTO = new GetTradeDTO();
+		
 		List<GetTradeDTO> finalTradeList = new ArrayList<>();
 
 		for(Trade savedTrade : tradesList ) {
-			
+			GetTradeDTO getTradeDTO = new GetTradeDTO();
 			getTradeDTO.setTradeId(savedTrade.getTradeId());
 			getTradeDTO.setTradeDate(savedTrade.getTradeDate());
 			getTradeDTO.setPrice(savedTrade.getPrice());
@@ -70,11 +71,12 @@ public class TradeService {
 		
 		Random random = new Random();
 		int numberOfTrades = 50 + random.nextInt(25);
-		
 		while(numberOfTrades > 0) {
 			Trade trade = new Trade();
-			trade.setQuantity(10);
+			trade.setQuantity(10 + random.nextInt(30));
 			trade.setTradeDate(new Date());
+			trade.setPrice(80 + random.nextDouble());
+			trade.setBuy(random.nextBoolean());
 			tradeRepository.save(trade);
 			numberOfTrades--;
 		}

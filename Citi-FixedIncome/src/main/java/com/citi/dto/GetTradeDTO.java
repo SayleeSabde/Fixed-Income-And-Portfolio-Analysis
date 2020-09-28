@@ -5,7 +5,7 @@ import java.util.Date;
 import com.citi.entity.Security;
 
 public class GetTradeDTO {
-	int tradeId;
+	String tradeId;
 	Security security;
 	String isin;
 	String issuerName;
@@ -14,10 +14,10 @@ public class GetTradeDTO {
 	int quantity;
 	boolean buy;
 	
-	public int getTradeId() {
+	public String getTradeId() {
 		return tradeId;
 	}
-	public void setTradeId(int i) {
+	public void setTradeId(String i) {
 		this.tradeId = i;
 	}
 	public Security getSecurity() {
