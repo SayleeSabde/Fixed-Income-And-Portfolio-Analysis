@@ -37,6 +37,7 @@ import com.citi.repository.TradeRepository;
  *
  */
 @Service
+@SuppressWarnings("deprecation")
 public class TradeService {
 	
 	static Logger logger = LoggerFactory.getLogger(TradeController.class.getName());
@@ -115,7 +116,11 @@ public class TradeService {
 			MarketPrice marketPrice = new MarketPrice();
 			marketPrice.setIsin(masterSecurity.getIsin());
 			System.out.println(masterSecurity.getIssuerName());
-			marketPrice.setMarketPrice(masterSecurity.getFaceValue() + random.nextInt(5) - random.nextInt(5) + random.nextDouble());
+			double faceValue = masterSecurity.getFaceValue();
+			double factor = (0.0001 * faceValue * random.nextInt(4)) - (0.0001 * faceValue * random.nextInt(3)) + random.nextDouble();
+			String factorString = String.format("%.2f", factor);
+			factor = Double.parseDouble(factorString);
+			marketPrice.setMarketPrice(faceValue + factor);
 			marketPriceRepository.save(marketPrice);
 		}
 		
@@ -135,18 +140,26 @@ public class TradeService {
 			int randomIndex = 0 + random.nextInt(12);
 			MasterSecurityDTO securityConsidered = masterSecList.get(randomIndex);
 			Trade trade = new Trade();
-			trade.setQuantity(10 + random.nextInt(500));
+			trade.setBuy(random.nextBoolean());
+			if(trade.isBuy()) {
+				trade.setQuantity(10 + random.nextInt(500));
+			}
+			else {
+				trade.setQuantity(10 + random.nextInt(200));
+			}
 			
 			Date issuedDate = securityConsidered.getIssueDate();
 			Date maturityDate = securityConsidered.getMaturityDate();
 			
-			Date finalDate = getRandomFinalDate(issuedDate, maturityDate);
-			
+			//Date finalDate = getRandomFinalDate(issuedDate, maturityDate);
+			Date finalDate = new Date();
 			trade.setTradeDate(finalDate);
 			double faceValue = securityConsidered.getFaceValue();
-			double factor = (0.01 * faceValue * random.nextInt(4)) - (0.01 * faceValue * random.nextInt(3)) + random.nextDouble();
+			double factor = (0.00001 * faceValue * random.nextInt(4)) - (0.00001 * faceValue * random.nextInt(3)) + random.nextDouble();
+			String factorString = String.format("%.2f", factor);
+			factor = Double.parseDouble(factorString);
 			trade.setPrice(faceValue + factor);
-			trade.setBuy(random.nextBoolean());
+			
 			trade.setMasterSecurityId(securityConsidered.getIsin());
 			
 			tradeRepository.save(trade);
@@ -156,20 +169,10 @@ public class TradeService {
 
 	public Date getRandomFinalDate(Date issuedDate, Date maturityDate) {
 		Random random = new Random();
-		Date startDate = new Date();
-		Date endDate = new Date();
-		Date extremeLeft = new Date();  
+		Date startDate = new Date("2020-4-1"); 
+		Date endDate = new Date("2021-3-31");
+		Date extremeLeft = new Date();
 		Date extremeRight = new Date();
-		try {
-			startDate = new SimpleDateFormat("yyyy-mm-dd").parse("2020-04-01");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		try {
-			endDate = new SimpleDateFormat("yyyy-mm-dd").parse("2021-03-31");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 		if(startDate.before(issuedDate)) {
 			extremeLeft = issuedDate;
 		}
@@ -182,10 +185,7 @@ public class TradeService {
 		else {
 			extremeRight = endDate;
 		}
-		
-		System.out.println("++++++++++++++++" +extremeLeft);
-		System.out.println("++++++++++++++++" +extremeRight);
-	
+			
 		long interval = extremeRight.getTime() - extremeLeft.getTime();
 		long finalInterval = extremeLeft.getTime() + (long)random.nextDouble() * interval;
 		Date finalDate = new Date(finalInterval);
