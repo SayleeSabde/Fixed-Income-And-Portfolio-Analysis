@@ -70,6 +70,14 @@ public class MasterSecurity {
 		this.issuerName = issuerName;
 	}
 
+	public String getIssueDate() {
+		return issueDate;
+	}
+
+	public void setIssueDate(String issueDate) {
+		this.issueDate = issueDate;
+	}
+
 	public double getFaceValue() {
 		return faceValue;
 	}
