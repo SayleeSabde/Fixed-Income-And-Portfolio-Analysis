@@ -75,7 +75,7 @@ public class TradeService {
 		return getTradeDTOListFromTrade();
 	}
 	
-	private List<GetTradeDTO> getTradeDTOListFromTrade() {
+	public List<GetTradeDTO> getTradeDTOListFromTrade() {
 		logger.info("++++++++++++++++++++++++++ In Trade Service +++++++++++++++++++++++++ ");
 		Iterable<Trade> tradesList = tradeRepository.findAll();
 		
@@ -99,7 +99,7 @@ public class TradeService {
 		
 	}
 
-	private void generateMarketPrices() {
+	public void generateMarketPrices() {
 		Random random = new Random();
 		marketPriceRepository.deleteAll();
 		Iterable<MasterSecurity> masterSecurityList = masterSecurityRepository.findAll();
@@ -111,22 +111,10 @@ public class TradeService {
 			marketPriceRepository.save(marketPrice);
 		}
 		
-//		System.out.println("JUST TEST ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//		Iterable<MasterSecurity> slist = masterSecurityRepository.findAll();
-//		for (MasterSecurity s : slist) {
-//			System.out.println(s.getIsin());
-//		}
-//		
-//		System.out.println("JUST COUPON ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//		 Iterable<CouponInfo> clist = couponInfoRepository.findAll();
-//		for (CouponInfo c : clist) {
-//			System.out.println(c.getIsin());
-//		}
-		
 	}
 
 	@Transactional
-	private void insertRandomTrades() {
+	public void insertRandomTrades() {
 		
 		Random random = new Random();
 		int numberOfTrades = 50 + random.nextInt(25);

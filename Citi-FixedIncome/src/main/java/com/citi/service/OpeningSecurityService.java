@@ -63,7 +63,7 @@ public class OpeningSecurityService {
 		return getOpeningSecurityDTOList();
 	}
 	
-	private List<OpeningSecurityDTO> getOpeningSecurityDTOList() {
+	public List<OpeningSecurityDTO> getOpeningSecurityDTOList() {
 		Iterable<OpeningSecurity> openingSecurity = openingSecurityRepository.findAll();
 		List<OpeningSecurityDTO> openingSecurityList = new ArrayList<>();
 		for(OpeningSecurity security : openingSecurity) {
@@ -80,7 +80,7 @@ public class OpeningSecurityService {
 		
 	}
 	@Transactional
-	private void insertRandomOpeningSecurity() {
+	public void insertRandomOpeningSecurity() {
 		
 		Random random = new Random();
 		int numberOfSecurities = 4 + random.nextInt(4);

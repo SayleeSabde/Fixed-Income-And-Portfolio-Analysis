@@ -42,6 +42,9 @@ public class MasterSecurity {
 	
 	@Column(name = "coupon_rate", nullable = false)
 	double couponRate;
+	
+	@Column(name = "issued_date", nullable = false)
+	String issueDate;
 
 	public String getIsin() {
 		return isin;
