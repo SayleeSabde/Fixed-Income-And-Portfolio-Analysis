@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 //import javax.ws.rs.core.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.citi.dto.GetTradeDTO;
 import com.citi.service.TradeService;
@@ -23,7 +25,8 @@ import com.citi.service.TradeService;
  * @author Dhruv
  *
  */
-@Controller // This means that this class is a Controller
+@RestController // This means that this class is a Controller
+@CrossOrigin
 @RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
 public class TradeController {
 	

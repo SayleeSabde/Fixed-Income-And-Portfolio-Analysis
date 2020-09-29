@@ -3,12 +3,14 @@
  */
 package com.citi.service;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -151,8 +153,13 @@ public class TradeService {
 			Date issuedDate = securityConsidered.getIssueDate();
 			Date maturityDate = securityConsidered.getMaturityDate();
 			
-			//Date finalDate = getRandomFinalDate(issuedDate, maturityDate);
 			Date finalDate = new Date();
+//			try {
+//				finalDate = createRandomDate(issuedDate, maturityDate);
+//			} catch (ParseException e) {
+//				e.printStackTrace();
+//			}
+			//Date finalDate = new Date();
 			trade.setTradeDate(finalDate);
 			double faceValue = securityConsidered.getFaceValue();
 			double factor = (0.00001 * faceValue * random.nextInt(4)) - (0.00001 * faceValue * random.nextInt(3)) + random.nextDouble();
@@ -169,8 +176,8 @@ public class TradeService {
 
 	public Date getRandomFinalDate(Date issuedDate, Date maturityDate) {
 		Random random = new Random();
-		Date startDate = new Date("2020-4-1"); 
-		Date endDate = new Date("2021-3-31");
+		Date startDate = new Date(2020,4,1,0,0,0); 
+		Date endDate = new Date(2021,3,31,0,0,0);
 		Date extremeLeft = new Date();
 		Date extremeRight = new Date();
 		if(startDate.before(issuedDate)) {
@@ -193,6 +200,25 @@ public class TradeService {
 		
 	}
 	
+	private static Date createRandomDate(Date issuedate, Date maturityDate) throws ParseException {
+		String startdate = "April 01, 2020";
+		DateFormat format = new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH);
+		Date startDate = format.parse(startdate);		
+		String enddate = "March 31, 2021";
+		Date endDate = format.parse(enddate);	
+		if(issuedate.after(startDate)) {
+			startDate = issuedate; 
+		}
+		if(maturityDate.before(endDate)) {
+			endDate = maturityDate;
+		}	
+		long start = startDate.getTime();
+		long end = endDate.getTime();
+		//long finalInterval = random
+		long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+		Date finalDate = new Date(randomEpochDay);
+		return finalDate;
+	}
 	
 
 }
