@@ -43,13 +43,15 @@ public class Trade {
 	@Column(nullable = false)
 	private boolean buy;
 	
-//	@GeneratedValue(strategy=GenerationType.AUTO)
-//	//many-to-one is used for establishing foreign key relationships
-//	@Column(nullable = false)
-//    //@ManyToOne				
-//    private MasterSecurity masterSecurity;
+	@Column(nullable = false)		
+    String masterSecurityId;
 	
-	
+	public String getMasterSecurityId() {
+		return masterSecurityId;
+	}
+	public void setMasterSecurityId(String masterSecurityId) {
+		this.masterSecurityId = masterSecurityId;
+	}
 	public String getTradeId() {
 		return tradeId;
 	}

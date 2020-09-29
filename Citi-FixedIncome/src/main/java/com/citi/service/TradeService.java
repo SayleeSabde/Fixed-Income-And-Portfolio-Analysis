@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -71,7 +72,6 @@ public class TradeService {
 		tradeRepository.deleteAll();
 		insertRandomTrades();
 		generateMarketPrices();
-		Iterable<MasterSecurity> masterSecurityList = masterSecurityRepository.findAll();
 		return getTradeDTOListFromTrade();
 	}
 	
@@ -88,11 +88,11 @@ public class TradeService {
 			getTradeDTO.setPrice(savedTrade.getPrice());
 			getTradeDTO.setQuantity(savedTrade.getQuantity());
 			getTradeDTO.setBuy(savedTrade.isBuy());
-			
-			//To depend on MasterSecurity
-			getTradeDTO.setSecurity(Security.Treasury_Bills);
-			getTradeDTO.setIsin("ISIN12345678");
-			getTradeDTO.setIssuerName("issuerName");
+			String isin = savedTrade.getMasterSecurityId();
+			Optional<MasterSecurity> securityConsidered = masterSecurityRepository.findById(isin);
+			getTradeDTO.setSecurity(Security.valueOf(securityConsidered.get().getSecurity()));
+			getTradeDTO.setIsin(isin);
+			getTradeDTO.setIssuerName(securityConsidered.get().getIssuerName());
 			finalTradeList.add(getTradeDTO);
 		}
 		return finalTradeList;
@@ -130,12 +130,26 @@ public class TradeService {
 		
 		Random random = new Random();
 		int numberOfTrades = 50 + random.nextInt(25);
+		Iterable<MasterSecurity> masterSecurityList = masterSecurityRepository.findAll();
+		ArrayList<MasterSecurity> masterSecList = new ArrayList();
+		for (MasterSecurity security : masterSecurityList) {
+			masterSecList.add(security);
+			
+		}
 		while(numberOfTrades > 0) {
+			int randomIndex = 0 + random.nextInt(12);
+			MasterSecurity securityConsidered = masterSecList.get(randomIndex);
 			Trade trade = new Trade();
-			trade.setQuantity(10 + random.nextInt(30));
+			trade.setQuantity(10 + random.nextInt(500));
+			
+			//Figure about the date
 			trade.setTradeDate(new Date());
-			trade.setPrice(80 + random.nextDouble());
+			
+			double faceValue = securityConsidered.getFaceValue();
+			double factor = (0.01 * faceValue * random.nextInt(4)) - (0.01 * faceValue * random.nextInt(3)) + random.nextDouble();
+			trade.setPrice(faceValue + factor);
 			trade.setBuy(random.nextBoolean());
+			trade.setMasterSecurityId(securityConsidered.getIsin());
 			tradeRepository.save(trade);
 			numberOfTrades--;
 		}
