@@ -6,15 +6,12 @@ package com.citi.service;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.citi.controller.TradeController;
 import com.citi.dto.GetTradeDTO;
 import com.citi.dto.MasterSecurityDTO;
-import com.citi.entity.CouponInfo;
 import com.citi.entity.MarketPrice;
 import com.citi.entity.MasterSecurity;
 import com.citi.entity.Security;
@@ -154,11 +150,11 @@ public class TradeService {
 			Date maturityDate = securityConsidered.getMaturityDate();
 			
 			Date finalDate = new Date();
-//			try {
-//				finalDate = createRandomDate(issuedDate, maturityDate);
-//			} catch (ParseException e) {
-//				e.printStackTrace();
-//			}
+			try {
+				finalDate = createRandomDate(issuedDate, maturityDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			//Date finalDate = new Date();
 			trade.setTradeDate(finalDate);
 			double faceValue = securityConsidered.getFaceValue();
@@ -173,51 +169,29 @@ public class TradeService {
 			numberOfTrades--;
 		}
 	}
-
-	public Date getRandomFinalDate(Date issuedDate, Date maturityDate) {
-		Random random = new Random();
-		Date startDate = new Date(2020,4,1,0,0,0); 
-		Date endDate = new Date(2021,3,31,0,0,0);
-		Date extremeLeft = new Date();
-		Date extremeRight = new Date();
-		if(startDate.before(issuedDate)) {
-			extremeLeft = issuedDate;
-		}
-		else {
-			extremeLeft = startDate;
-		}
-		if(endDate.after(maturityDate)) {
-			extremeRight = maturityDate;
-		}
-		else {
-			extremeRight = endDate;
-		}
-			
-		long interval = extremeRight.getTime() - extremeLeft.getTime();
-		long finalInterval = extremeLeft.getTime() + (long)random.nextDouble() * interval;
-		Date finalDate = new Date(finalInterval);
-		return finalDate;
-		
-	}
 	
 	private static Date createRandomDate(Date issuedate, Date maturityDate) throws ParseException {
-		String startdate = "April 01, 2020";
-		DateFormat format = new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH);
-		Date startDate = format.parse(startdate);		
-		String enddate = "March 31, 2021";
-		Date endDate = format.parse(enddate);	
+		String startdate = "2020-04-01";
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		Date startDate = format.parse(startdate);
+		String enddate = "2021-03-31";
+		Date endDate = format.parse(enddate);
 		if(issuedate.after(startDate)) {
 			startDate = issuedate; 
 		}
 		if(maturityDate.before(endDate)) {
 			endDate = maturityDate;
-		}	
+		}
+
+		Random random = new Random();
 		long start = startDate.getTime();
 		long end = endDate.getTime();
-		//long finalInterval = random
-		long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
-		Date finalDate = new Date(randomEpochDay);
+		long interval = end - start;
+		long factor = (long) (interval * random.nextDouble());
+		long randomEpochDay = start + factor;
+	    Date finalDate = new Date(randomEpochDay);
 		return finalDate;
+
 	}
 	
 

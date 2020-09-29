@@ -41,6 +41,12 @@ public class TradeController {
 		return tradeService.generateNewTrades();
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, path="/viewAll")
+	public @ResponseBody Iterable<GetTradeDTO> viewAllTrades() {
+		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
+		return tradeService.getTradeDTOListFromTrade();
+	}
+	
 	
 //	@RequestMapping(produces = MediaType.APPLICATION_JSON, method = RequestMethod.GET, value = "/newTrades")
 //	public @ResponseBody Iterable<GetTradeDTO> generateNewTrades() {

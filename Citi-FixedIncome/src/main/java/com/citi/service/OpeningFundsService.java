@@ -15,7 +15,10 @@ public class OpeningFundsService {
 	
 	public OpeningFundsDTO getOpeningFunds() {
 		Random random = new Random();
-		openingFundsDTO.openingFunds = 500000000 + 4500000000.0 * random.nextDouble();
+		Double funds = 50000000 + 4500000000.0 * random.nextDouble();
+		String factorString = String.format("%.2f", funds);
+		funds = Double.parseDouble(factorString);
+		openingFundsDTO.openingFunds = funds; 
 		return openingFundsDTO;
 	}
 	 
