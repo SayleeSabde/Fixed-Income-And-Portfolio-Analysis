@@ -81,14 +81,84 @@ public class TradeService {
 	}
 
 	@Transactional
-	public Iterable<GetTradeDTO> generateNewTrades() {
+	public Iterable<GetTradeDTO> generateNewTrades() throws ParseException {
 		
 		tradeRepository.deleteAll();
-		insertRandomTrades();
+		//insertRandomTrades();
+		insertLogicalTrades();
 		generateMarketPrices();
 		return getTradeDTOListFromTrade();
 	}
 	
+	public void insertLogicalTrades() throws ParseException {
+		Random random = new Random();
+		//int numberOfTrades = 50 + random.nextInt(25);
+		Iterable<MasterSecurityDTO> masterSecurityDTOList = masterSecurityService.getMasterSecuritiesDTOList();
+		ArrayList<MasterSecurityDTO> masterSecList = new ArrayList();
+		for (MasterSecurityDTO security : masterSecurityDTOList) {
+			masterSecList.add(security);
+		}
+		int counter;
+		ArrayList<Double> priceList = new ArrayList<>();
+		priceList.add((double) 25000);
+		priceList.add((double) 25000);
+		priceList.add(10000.02);
+		priceList.add(10000.32);
+		priceList.add(100000.11);
+		priceList.add(100000.77);
+		priceList.add(454503.76);
+		priceList.add(444456.97);
+		priceList.add(10000.87);
+		priceList.add(10000.28);
+		priceList.add(10000.56);
+		priceList.add(50000.32);
+		priceList.add(50000.34);
+		int index = 0;
+		while(index < 13) {
+			MasterSecurityDTO masterSecurity = masterSecList.get(index);
+			counter = 5;
+			while(counter > 0) {
+				Trade trade = new Trade();
+				trade.setMasterSecurityId(masterSecurity.getIsin());
+				trade.setPrice(priceList.get(index) + random.nextInt(55) - random.nextInt(43));
+				if (counter > 3) {
+					trade.setBuy(true);
+					Date accurateDate = getRandomAccurateBuyDate(masterSecurity.getIssueDate(), masterSecurity.getMaturityDate());
+					trade.setTradeDate(accurateDate);
+					trade.setQuantity(20 + random.nextInt(480));
+				}
+				else {
+					trade.setBuy(random.nextBoolean());
+					Date accurateDate = getRandomAccurateSellDate(masterSecurity.getIssueDate(), masterSecurity.getMaturityDate());
+					trade.setTradeDate(accurateDate);
+					trade.setQuantity(20 + random.nextInt(180));
+	
+				}
+				if(tradeInWindow(trade.getTradeDate())) {
+					trade.setBuy(true);
+				}
+				tradeRepository.save(trade);
+				counter--;
+			}
+			index = index + 1;
+	}
+		
+		
+		
+	}
+
+	private boolean tradeInWindow(Date tradeDate) throws ParseException {
+		String startdate = "2020-09-24";
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		Date startDate = format.parse(startdate);
+		String enddate = "2020-10-08";
+		Date endDate = format.parse(enddate);
+		if(tradeDate.before(endDate) && tradeDate.after(startDate)) {
+				return true;
+		}
+		return false;
+	}
+
 	@Transactional
 	public List<GetTradeDTO> getTradeDTOListFromTrade() {
 		logger.info("++++++++++++++++++++++++++ In Trade Service +++++++++++++++++++++++++ ");
@@ -179,6 +249,49 @@ public class TradeService {
 			numberOfTrades--;
 		}
 	}
+	
+	public Date getRandomAccurateBuyDate(Date issuedDate, Date maturityDate) throws ParseException {
+		String startdate = "2020-04-01";
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		Date startDate = format.parse(startdate);
+		String enddate = "2020-10-08";
+		Date endDate = format.parse(enddate);
+		if(issuedDate.after(startDate)) {
+			startDate = issuedDate; 
+		}
+		if(maturityDate.before(endDate)) {
+			endDate = maturityDate;
+		}
+
+		long start = startDate.getTime();
+		long end = endDate.getTime();
+		//long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+		long randomEpochDay = ThreadLocalRandom.current().nextLong(start, end);
+	    Date finalDate = new Date(randomEpochDay);
+		return finalDate;
+	}
+		
+		public Date getRandomAccurateSellDate(Date issuedDate, Date maturityDate) throws ParseException {
+			String startdate = "2020-09-24";
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+			Date startDate = format.parse(startdate);
+			String enddate = "2021-03-31";
+			Date endDate = format.parse(enddate);
+			if(issuedDate.after(startDate)) {
+				startDate = issuedDate; 
+			}
+			if(maturityDate.before(endDate)) {
+				endDate = maturityDate;
+			}
+
+			long start = startDate.getTime();
+			long end = endDate.getTime();
+			//long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+			long randomEpochDay = ThreadLocalRandom.current().nextLong(start, end);
+			//long randomEpochDay = start;
+		    Date finalDate = new Date(randomEpochDay);
+			return finalDate;
+}
 	
 	public Date getRandomFinalDate(Date issuedDate, Date maturityDate) throws ParseException {
 			String startdate = "2020-04-01";

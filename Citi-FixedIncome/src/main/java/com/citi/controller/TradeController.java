@@ -3,6 +3,8 @@
  */
 package com.citi.controller;
 
+import java.text.ParseException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class TradeController {
 	TradeService tradeService;
 
 	@RequestMapping(method = RequestMethod.GET, path="/all")
-	public @ResponseBody Iterable<GetTradeDTO> getAllTrades() {
+	public @ResponseBody Iterable<GetTradeDTO> getAllTrades() throws ParseException {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
 		return tradeService.generateNewTrades();
 	}
