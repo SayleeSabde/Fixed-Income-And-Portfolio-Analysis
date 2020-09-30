@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.citi.dto.GetTradeDTO;
+import com.citi.dto.PostTradeDTO;
 import com.citi.service.TradeService;
 
 /**
@@ -47,24 +49,12 @@ public class TradeController {
 	public @ResponseBody Iterable<GetTradeDTO> viewAllTrades() {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
 		return tradeService.getTradeDTOListFromTrade();
+	} 
+	
+	@RequestMapping(method = RequestMethod.POST, path="/GenerateTrade")
+	public @ResponseBody GetTradeDTO saveTrade(@RequestBody PostTradeDTO postTrade ) {			
+		return tradeService.insertTrade(postTrade);
+	
 	}
 	
-	
-//	@RequestMapping(produces = MediaType.APPLICATION_JSON, method = RequestMethod.GET, value = "/newTrades")
-//	public @ResponseBody Iterable<GetTradeDTO> generateNewTrades() {
-//		return tradeService.generateNewTrades();
-//	}
-//	
-//	@RequestMapping(produces = MediaType.APPLICATION_JSON, method = RequestMethod.GET, value = "{id}")
-//	public @ResponseBody TradeDTO getTradeById(@PathVariable("id") String id) {
-//		return tradeService.getTradeById(id);
-//	}
-//	
-//	@RequestMapping(produces = MediaType.APPLICATION_JSON, method = RequestMethod.GET, value = "/viewTrades")
-//	public @ResponseBody Iterable<TradeDTO> viewAllTrades() {
-//		return tradeService.viewAllTrades();
-//	}
-	
-	
-
 }
