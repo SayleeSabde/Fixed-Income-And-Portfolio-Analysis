@@ -1,5 +1,7 @@
 package com.citi.controller;
 
+import java.text.ParseException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class OpeningSecurityController {
 	OpeningSecurityService openingSecurityService;
 
 	@RequestMapping(method = RequestMethod.GET, path="/openingsecurity")
-	public @ResponseBody Iterable<OpeningSecurityDTO> getOpeningSecurity() {
+	public @ResponseBody Iterable<OpeningSecurityDTO> getOpeningSecurity() throws ParseException {
 		logger.debug("++++++++++++++++++++++Debug Opening Security++++++++++++++++++++++++++++++++++++++++++");
 		return openingSecurityService.getOpeningSecurity();
 	}

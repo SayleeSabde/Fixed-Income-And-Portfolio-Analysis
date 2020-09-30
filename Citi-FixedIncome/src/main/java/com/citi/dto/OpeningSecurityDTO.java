@@ -2,6 +2,7 @@ package com.citi.dto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.EnumType;
@@ -16,6 +17,27 @@ public class OpeningSecurityDTO {
 	private double quantity;
 	private Date maturityDate;
 	private double couponRate;
+	private Date buyDate;
+	private double buyPrice;
+	
+	public Date getBuyDate() {
+		return buyDate;
+	}
+	public void setBuyDate(String buyDate) {
+		Date date = null;
+		try {
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(buyDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.buyDate = date;
+	}
+	public double getBuyPrice() {
+		return buyPrice;
+	}
+	public void setBuyPrice(double buyPrice) {
+		this.buyPrice = buyPrice;
+	}
 	
 	public String getIsin() {
 		return isin;
@@ -47,10 +69,15 @@ public class OpeningSecurityDTO {
 	public void setMaturityDate(String string) {
 		Date date = null;
 		try {
-			date = new SimpleDateFormat("yyyy-mm-dd").parse(string);
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(string);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		//Date dt = new Date();
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(date); 
+		c.add(Calendar.DATE, 1);
+		date = c.getTime();
 		this.maturityDate = date;
 	}
 	public double getCouponRate() {

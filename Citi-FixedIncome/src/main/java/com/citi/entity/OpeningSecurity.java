@@ -28,15 +28,32 @@ public class OpeningSecurity {
 	@Column(name = "quantity", nullable = false)
 	private double quantity;
 	
-//	@Column(name = "price", nullable = false)
-//	private double price;
-	
 	@Column(name = "maturity_date", nullable = false)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private String maturityDate;
 	
 	@Column(name = "coupon_rate", nullable = false)
 	private double couponRate;
+	
+	@Column(name = "buy_date", nullable = false)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String buyDate;
+	
+	@Column(name = "buy_price", nullable = false)
+	private double buyPrice;
+	
+	public String getBuyDate() {
+		return buyDate;
+	}
+	public void setBuyDate(String buyDate) {
+		this.buyDate = buyDate;
+	}
+	public double getBuyPrice() {
+		return buyPrice;
+	}
+	public void setBuyPrice(double buyPrice) {
+		this.buyPrice = buyPrice;
+	}
 	
 	public String getIsin() {
 		return isin;

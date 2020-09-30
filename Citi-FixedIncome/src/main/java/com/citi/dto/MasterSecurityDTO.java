@@ -71,7 +71,7 @@ public class MasterSecurityDTO {
 	public void setMaturityDate(String maturityDate) {
 		Date date = null;
 		try {
-			date = new SimpleDateFormat("yyyy-mm-dd").parse(maturityDate);
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(maturityDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -93,7 +93,7 @@ public class MasterSecurityDTO {
 	public void setIssueDate(String issueDate) {
 		Date date = null;
 		try {
-			date = new SimpleDateFormat("yyyy-mm-dd").parse(issueDate);
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(issueDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

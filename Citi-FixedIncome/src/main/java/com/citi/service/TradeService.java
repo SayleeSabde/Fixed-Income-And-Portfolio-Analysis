@@ -1,17 +1,20 @@
-/**
- * 
- */
 package com.citi.service;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.citi.controller.TradeController;
 import com.citi.dto.GetTradeDTO;
 import com.citi.dto.MasterSecurityDTO;
+import com.citi.dto.PostTradeDTO;
+import com.citi.entity.CouponInfo;
 import com.citi.entity.MarketPrice;
 import com.citi.entity.MasterSecurity;
 import com.citi.entity.Security;
@@ -29,6 +34,10 @@ import com.citi.repository.CouponInfoRepository;
 import com.citi.repository.MarketPriceRepository;
 import com.citi.repository.MasterSecurityRepository;
 import com.citi.repository.TradeRepository;
+
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Dhruv
@@ -85,7 +94,6 @@ public class TradeService {
 	public List<GetTradeDTO> getTradeDTOListFromTrade() {
 		logger.info("++++++++++++++++++++++++++ In Trade Service +++++++++++++++++++++++++ ");
 		Iterable<Trade> tradesList = tradeRepository.findAll();
-		
 		List<GetTradeDTO> finalTradeList = new ArrayList<>();
 
 		for(Trade savedTrade : tradesList ) {
@@ -148,51 +156,70 @@ public class TradeService {
 			
 			Date issuedDate = securityConsidered.getIssueDate();
 			Date maturityDate = securityConsidered.getMaturityDate();
-			
 			Date finalDate = new Date();
 			try {
-				finalDate = createRandomDate(issuedDate, maturityDate);
+				finalDate = getRandomFinalDate(issuedDate, maturityDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			//Date finalDate = new Date();
 			trade.setTradeDate(finalDate);
 			double faceValue = securityConsidered.getFaceValue();
 			double factor = (0.00001 * faceValue * random.nextInt(4)) - (0.00001 * faceValue * random.nextInt(3)) + random.nextDouble();
 			String factorString = String.format("%.2f", factor);
 			factor = Double.parseDouble(factorString);
 			trade.setPrice(faceValue + factor);
-			
 			trade.setMasterSecurityId(securityConsidered.getIsin());
-			
 			tradeRepository.save(trade);
 			numberOfTrades--;
 		}
 	}
 	
-	private static Date createRandomDate(Date issuedate, Date maturityDate) throws ParseException {
-		String startdate = "2020-04-01";
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		Date startDate = format.parse(startdate);
-		String enddate = "2021-03-31";
-		Date endDate = format.parse(enddate);
-		if(issuedate.after(startDate)) {
-			startDate = issuedate; 
-		}
-		if(maturityDate.before(endDate)) {
-			endDate = maturityDate;
-		}
+	public Date getRandomFinalDate(Date issuedDate, Date maturityDate) throws ParseException {
+			String startdate = "2020-04-01";
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+			Date startDate = format.parse(startdate);
+			String enddate = "2021-03-31";
+			Date endDate = format.parse(enddate);
+			if(issuedDate.after(startDate)) {
+				startDate = issuedDate; 
+			}
+			if(maturityDate.before(endDate)) {
+				endDate = maturityDate;
+			}
 
-		Random random = new Random();
-		long start = startDate.getTime();
-		long end = endDate.getTime();
-		long interval = end - start;
-		long factor = (long) (interval * random.nextDouble());
-		long randomEpochDay = start + factor;
-	    Date finalDate = new Date(randomEpochDay);
-		return finalDate;
-
+			long start = startDate.getTime();
+			long end = endDate.getTime();
+			//long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+			long randomEpochDay = ThreadLocalRandom.current().nextLong(start, end);
+		    Date finalDate = new Date(randomEpochDay);
+			return finalDate;
 	}
 	
+	public GetTradeDTO insertTrade(PostTradeDTO postTrade) {
+		
+		Trade trade = new Trade();
+		trade.setBuy(postTrade.isBuy());
+		trade.setMasterSecurityId(postTrade.getIsin());
+		trade.setPrice(postTrade.getPrice());
+		trade.setQuantity(postTrade.getQuantity());
+		trade.setTradeDate(postTrade.getTradeDate());
+		
+		Trade savedTrade = tradeRepository.save(trade);
+		GetTradeDTO getTradeDTO = new GetTradeDTO();
+		getTradeDTO.setTradeId(savedTrade.getTradeId());
+		getTradeDTO.setTradeDate(savedTrade.getTradeDate());
+		getTradeDTO.setPrice(savedTrade.getPrice());
+		getTradeDTO.setQuantity(savedTrade.getQuantity());
+		getTradeDTO.setBuy(savedTrade.isBuy());
+		
+		
+		Optional<MasterSecurity> securityConsidered = masterSecurityRepository.findById(savedTrade.getMasterSecurityId());
+		getTradeDTO.setSecurity(Security.valueOf(securityConsidered.get().getSecurity()));
+		getTradeDTO.setIssuerName(securityConsidered.get().getIssuerName());
+		String isin = savedTrade.getMasterSecurityId();
+		getTradeDTO.setIsin(isin);
+		return getTradeDTO;
+		
+	}	
 
 }
