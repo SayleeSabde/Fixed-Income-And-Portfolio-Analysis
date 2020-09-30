@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.citi.dto.CouponInfoDTO;
@@ -19,6 +20,7 @@ import com.citi.repository.CouponInfoRepository;
  * @author Dhruv
  *
  */
+@Service
 public class CouponInfoService {
 	
 	@Autowired

@@ -44,7 +44,6 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  */
 @Service
-@SuppressWarnings("deprecation")
 public class TradeService {
 	
 	static Logger logger = LoggerFactory.getLogger(TradeController.class.getName());
@@ -148,10 +147,16 @@ public class TradeService {
 			Trade trade = new Trade();
 			trade.setBuy(random.nextBoolean());
 			if(trade.isBuy()) {
-				trade.setQuantity(10 + random.nextInt(500));
+				trade.setQuantity(110 + random.nextInt(500));
 			}
 			else {
-				trade.setQuantity(10 + random.nextInt(200));
+				if(numberOfTrades > 30)  {
+					trade.setQuantity(10 + random.nextInt(100));
+					trade.setBuy(true);
+				}
+				else {
+					trade.setQuantity(10 + random.nextInt(100));
+				}
 			}
 			
 			Date issuedDate = securityConsidered.getIssueDate();
@@ -163,6 +168,7 @@ public class TradeService {
 				e.printStackTrace();
 			}
 			trade.setTradeDate(finalDate);
+			//trade.setTradeDate(date);
 			double faceValue = securityConsidered.getFaceValue();
 			double factor = (0.00001 * faceValue * random.nextInt(4)) - (0.00001 * faceValue * random.nextInt(3)) + random.nextDouble();
 			String factorString = String.format("%.2f", factor);
@@ -194,6 +200,22 @@ public class TradeService {
 		    Date finalDate = new Date(randomEpochDay);
 			return finalDate;
 	}
+	
+	public List<Date> getRandomFinalDates(int numberOfTrades) throws ParseException {
+		List<Date> finalDates = new ArrayList<>();
+		String startdate = "2020-04-01";
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		Date startDate = format.parse(startdate);
+		String enddate = "2021-03-31";
+		Date endDate = format.parse(enddate);
+		long start = startDate.getTime();
+		long end = endDate.getTime();
+		//long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+		long randomEpochDay = ThreadLocalRandom.current().nextLong(start, end);
+	    Date finalDate = new Date(randomEpochDay);
+		finalDates.add(finalDate);
+		return finalDates;
+}
 	
 	public GetTradeDTO insertTrade(PostTradeDTO postTrade) {
 		
