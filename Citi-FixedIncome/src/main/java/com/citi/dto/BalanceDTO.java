@@ -2,42 +2,50 @@ package com.citi.dto;
 
 public class BalanceDTO {
 	
-	private double couponAccrued;
+	private double realisedCoupon;
+	private double unrealisedcoupon;
+	public double getUnrealisedcoupon() {
+		return unrealisedcoupon;
+	}
+
+	public void setUnrealisedcoupon(double unrealisedcoupon) {
+		this.unrealisedcoupon = unrealisedcoupon;
+	}
 	private double realisedYield;
 	private double unrealisedYield;
-	private double closingFundBalance;
 	
+	public double getUnrealisedYield() {
+		return unrealisedYield;
+	}
+
+	public void setUnrealisedYield(double unrealisedYield) {
+		this.unrealisedYield = unrealisedYield;
+	}
+	private double closingFundBalance;
 	public BalanceDTO() {
 		
 	}
-	
-	public BalanceDTO(double couponAccrued, double realisedYield, double unrealisedYield,
-			double closingFundBalance) {
+
+	public BalanceDTO(double realisedCoupon, double realisedYield, double closingFundBalance) {
 		super();
-		this.couponAccrued = couponAccrued;
+		this.realisedCoupon = realisedCoupon;
 		this.realisedYield = realisedYield;
-		this.unrealisedYield = unrealisedYield;
 		this.closingFundBalance = closingFundBalance;
 	}
-	
-	
-	public double getCouponAccrued() {
-		return couponAccrued;
+
+	public double getRealisedCoupon() {
+		return realisedCoupon;
 	}
-	public void setCouponAccrued(double couponAccrued) {
-		this.couponAccrued = couponAccrued;
+
+	public void setRealisedCoupon(double realisedCoupon) {
+		this.realisedCoupon = realisedCoupon;
 	}
+
 	public double getRealisedYield() {
 		return realisedYield;
 	}
 	public void setRealisedYield(double realisedYield) {
 		this.realisedYield = realisedYield;
-	}
-	public double getUnrealisedYield() {
-		return unrealisedYield;
-	}
-	public void setUnrealisedYield(double unrealisedYield) {
-		this.unrealisedYield = unrealisedYield;
 	}
 	public double getClosingFundBalance() {
 		return closingFundBalance;
@@ -45,7 +53,5 @@ public class BalanceDTO {
 	public void setClosingFundBalance(double closingFundBalance) {
 		this.closingFundBalance = closingFundBalance;
 	}
-	
-	
 
 }

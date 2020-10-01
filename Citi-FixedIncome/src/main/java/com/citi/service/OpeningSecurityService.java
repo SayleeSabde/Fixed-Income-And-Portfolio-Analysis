@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.citi.controller.OpeningSecurityController;
 import com.citi.dto.MasterSecurityDTO;
+import com.citi.dto.OpeningFundsDTO;
 import com.citi.dto.OpeningSecurityDTO;
 import com.citi.entity.MarketPrice;
 import com.citi.entity.MasterSecurity;
@@ -83,7 +84,7 @@ public class OpeningSecurityService {
 		return getOpeningSecurityDTOList();
 	}
 	
-	List<OpeningSecurityDTO> getOpeningSecurityDTOList() {
+	public List<OpeningSecurityDTO> getOpeningSecurityDTOList() {
 		Iterable<OpeningSecurity> openingSecurity = openingSecurityRepository.findAll();
 		List<OpeningSecurityDTO> openingSecurityList = new ArrayList<>();
 		for(OpeningSecurity security : openingSecurity) {
@@ -105,7 +106,7 @@ public class OpeningSecurityService {
 	private void insertRandomOpeningSecurity() throws ParseException {
 		
 		Random random = new Random();
-		int numberOfSecurities = 4 + random.nextInt(4);
+		int numberOfSecurities = 7 + random.nextInt(2);
 		Iterable<MasterSecurityDTO> masterSecurityDTOList = masterSecurityService.getMasterSecuritiesDTOList();
 		ArrayList<MasterSecurityDTO> masterSecList = new ArrayList();
 		for (MasterSecurityDTO security : masterSecurityDTOList) {
@@ -146,6 +147,7 @@ public class OpeningSecurityService {
 			double faceValue = masterSecurity.getFaceValue();
 			double buyPrice = generateBuyPrice(faceValue);
 			openingSecurity.setBuyPrice(buyPrice);
+			openingSecurity.setOpeningFunds(500000000 + 4500000000.0 * random.nextDouble());
 			openingSecurityRepository.save(openingSecurity);
 			masterSecList.remove(randomIndex);        //Removing the master security with index randomIndex from masterSecList
 			numberOfSecurities--;
@@ -190,4 +192,18 @@ public class OpeningSecurityService {
 			return "validBuy";
 		}
 	}
+	
+	public OpeningFundsDTO getOpeningFunds() {
+		OpeningFundsDTO openingFundsDTO = new OpeningFundsDTO();
+		Iterable<OpeningSecurity> openingSecurityList = openingSecurityRepository.findAll();
+		ArrayList<OpeningSecurity> openingSecList = new ArrayList();
+		for (OpeningSecurity security : openingSecurityList) {
+			openingSecList.add(security);
+			break;
+		}
+		openingFundsDTO.setOpeningFunds(openingSecList.get(0).getOpeningFunds());
+		return openingFundsDTO;
+	}
+	
+	
 }

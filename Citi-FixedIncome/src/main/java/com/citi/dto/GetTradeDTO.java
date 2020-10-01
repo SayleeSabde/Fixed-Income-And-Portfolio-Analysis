@@ -1,6 +1,7 @@
 package com.citi.dto;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import com.citi.entity.Security;
 
@@ -9,10 +10,12 @@ public class GetTradeDTO {
 	Security security;
 	String isin;
 	String issuerName;
-	Date tradeDate;
+//	Date tradeDate;
+	GregorianCalendar tradeDate;
 	double price;
 	int quantity;
 	boolean buy;
+	
 	
 	public String getTradeId() {
 		return tradeId;
@@ -38,11 +41,11 @@ public class GetTradeDTO {
 	public void setIssuerName(String issuerName) {
 		this.issuerName = issuerName;
 	}
-	public Date getTradeDate() {
+	public GregorianCalendar getTradeDate() {
 		return tradeDate;
 	}
-	public void setTradeDate(Date tradeDate) {
-		this.tradeDate = tradeDate;
+	public void setTradeDate(GregorianCalendar object) {
+		this.tradeDate = object;
 	}
 	public double getPrice() {
 		return price;

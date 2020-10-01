@@ -2,45 +2,85 @@ package com.citi.dto;
 
 public class ProfitDTO {	
 	
-	private String security;
+	private String issuername;
 	private String isin;
-	private double profitLoss;
-	private String realisedOrUnrealised;
-	
-	public ProfitDTO() {
+	//realised coupon
+	private double couponIncome;
+	//unrealised coupon
+	private double unrealisedcouponIncome;
+	public double getUnrealisedcouponIncome() {
+		return unrealisedcouponIncome;
+	}
 
+	public void setUnrealisedcouponIncome(double unrealisedcouponIncome) {
+		this.unrealisedcouponIncome = unrealisedcouponIncome;
+	}
+	private double capitalGainLoss;
+	private double unrealisedProfitLoss;
+	
+	public double getUnrealisedProfitLoss() {
+		return unrealisedProfitLoss;
+	}
+
+
+
+
+	public void setUnrealisedProfitLoss(double unrealisedProfitLoss) {
+		this.unrealisedProfitLoss = unrealisedProfitLoss;
+	}
+
+
+
+
+	public ProfitDTO() {
+		
 	}
 	
-	public ProfitDTO(String security, String isin, double profitLoss, String realisedOrUnrealised) {
-		//super();
-		this.security = security;
+
+
+
+	public String getIssuername() {
+		return issuername;
+	}
+
+
+
+
+	public void setIssuername(String issuername) {
+		this.issuername = issuername;
+	}
+
+
+
+
+	public ProfitDTO(String issuername, String isin, double couponIncome, double capitalGainLoss) {
+		super();
+		this.issuername = issuername;
 		this.isin = isin;
-		this.profitLoss = profitLoss;
-		this.realisedOrUnrealised = realisedOrUnrealised;
+		this.couponIncome = couponIncome;
+		this.capitalGainLoss = capitalGainLoss;
 	}
-	public String getSecurity() {
-		return security;
-	}
-	public void setSecurity(String security) {
-		this.security = security;
-	}
+
+
+
+
 	public String getIsin() {
 		return isin;
 	}
 	public void setIsin(String isin) {
 		this.isin = isin;
 	}
-	public double getPl() {
-		return profitLoss;
+	public double getCouponIncome() {
+		return couponIncome;
 	}
-	public void setPl(double pl) {
-		this.profitLoss = pl;
+	public void setCouponIncome(double couponIncome) {
+		this.couponIncome = couponIncome;
 	}
-	public String getRealisedOrUnrealised() {
-		return realisedOrUnrealised;
+	public double getCapitalGainLoss() {
+		return capitalGainLoss;
 	}
-	public void setRealisedOrUnrealised(String realisedOrUnrealised) {
-		this.realisedOrUnrealised = realisedOrUnrealised;
+	public void setCapitalGainLoss(double capitalGainLoss) {
+		this.capitalGainLoss = capitalGainLoss;
 	}
-
+	
 }

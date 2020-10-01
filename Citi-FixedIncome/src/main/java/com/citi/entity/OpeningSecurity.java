@@ -42,6 +42,15 @@ public class OpeningSecurity {
 	@Column(name = "buy_price", nullable = false)
 	private double buyPrice;
 	
+	@Column(name = "opening_funds_balance", nullable = false)
+	private double openingFunds;
+	
+	public double getOpeningFunds() {
+		return openingFunds;
+	}
+	public void setOpeningFunds(double openingFunds) {
+		this.openingFunds = openingFunds;
+	}
 	public String getBuyDate() {
 		return buyDate;
 	}

@@ -25,9 +25,9 @@ public class OpeningFundsController {
 	@Autowired
 	OpeningFundsService openingFundsService;
 	
-	@RequestMapping(method = RequestMethod.GET, path="/openingfunds")
-	public @ResponseBody OpeningFundsDTO getOpeningFunds() {
-		logger.debug("++++++++++++++++++++++Debug Opening Funds++++++++++++++++++++++++++++++++++++++++++");
-		return openingFundsService.getOpeningFunds();
-	}
+//	@RequestMapping(method = RequestMethod.GET, path="/openingfunds")
+//	public @ResponseBody OpeningFundsDTO getOpeningFunds() {
+//		logger.debug("++++++++++++++++++++++Debug Opening Funds++++++++++++++++++++++++++++++++++++++++++");
+//		return openingFundsService.getOpeningFunds();
+//	}
 }
