@@ -131,21 +131,33 @@ public double TradeQuant(String isin) {
 		return trade_quant; 
 	}
 
-//	public double getFormQuant(Date input_date,String isin) {
-//		
-//		List<GetTradeDTO> tradeList = tradeservice.getTradeDTOListFromTrade();
-//		
-//		for(GetTradeDTO trade:tradeList) {
-//			
-//			if(trade.getTradeDate().before(input_date)) {
-//				
-//				
-//			}
-//		}
-//		
-//		
-//		return 0;
-//	}
+	public double getFormQuant(Date input_date,String isin_form) {
+		
+		List<GetTradeDTO> tradeList = tradeservice.getTradeDTOListFromTrade();
+			double openingbalance = 0;
+				if(OpeningSecQuant(isin_form)>0) {
+					openingbalance = OpeningSecQuant(isin_form);
+				}
+				double formquant=openingbalance;
+		for(GetTradeDTO trade:tradeList) {
+			String isin = trade.getIsin();
+			GregorianCalendar d = trade.getTradeDate();
+			Date dformat = d.getTime();
+			if(dformat.before(input_date) && (isin.equals(isin_form))) {
+				
+				if(trade.isBuy()==true) {
+					formquant = formquant + trade.getQuantity() ;
+					}
+					else{	
+					formquant = formquant - trade.getQuantity();	
+					}
+				
+			}
+		}
+		
+		
+		return formquant;
+	}
 	public double CalcCouponTot() {
 		logger.info("++++++++++++++++++++++++++ IN COUPON TOT +++++++++++++++++++++++++ ");
 		Iterable<CouponInfoDTO> couponinfolist = CouponInfoService.getCouponList();
@@ -154,6 +166,49 @@ public double TradeQuant(String isin) {
 		double couponTot=0;
 		logger.debug("Value of coupontot--->>>> "+ couponTot);
 		for(CouponInfoDTO couponinfo_element: couponinfolist) {
+			//logger.info("++++++++++++++++++++++++++ IN FOR LOOP +++++++++++++++++++++++++ ");
+			//int id = m.getPid();
+			String isin = couponinfo_element.getIsin();
+			logger.debug("Value of isin---->>>> "+ isin);
+			Date couponDate = couponinfo_element.getCouponDates();
+			//logger.debug("Value of tradedate---->>>> "+ couponDate);
+			double currentCoupon=0;
+			double prevCoupon=0;
+			double facevalue = couponinfo_element.getFaceValue();
+			//logger.debug("Value of facevalue---->>>> "+ facevalue);
+			//double facevalue = mastersecurityRepository.findById(isin).get().getFaceValue();
+			double couponrate = couponinfo_element.getCouponRate();
+			//logger.debug("Value of couponrate---->>>> "+ couponrate);
+			//double dcc = CouponInfoService.getDccFactor(couponinfo_element.getDayCountConvention());
+			//logger.debug("Value of total dcc---->>>> "+ dcc);
+			boolean annual = couponinfo_element.isAnnual();
+			//logger.debug("Value of annual---->>>> "+ annual);
+			currentCoupon = CalcCouponSec(isin,couponDate,facevalue,couponrate,annual);
+			logger.debug("Value of currentcoupon--->>>> "+ currentCoupon);
+//			if(hmap_coupon.containsKey(isin)) {
+//				prevCoupon = hmap_coupon.get(isin);
+//			}
+//			logger.debug("Value of prevcoupon---->>>> "+ prevCoupon);
+			currentCoupon = currentCoupon + prevCoupon;
+			logger.debug("Value of currentcoupon---->>>> "+ currentCoupon);
+			hmap_coupon.put(isin, currentCoupon);
+			couponTot = couponTot + currentCoupon;
+			//logger.debug("Value of total coupon---->>>> "+ couponTot);
+		}
+		logger.debug("Value of total coupon---->>>> "+ couponTot);
+		return couponTot;
+
+	}
+	
+	public double CalcCouponTotByDate(Date formdate) {
+		logger.info("++++++++++++++++++++++++++ IN COUPON TOT +++++++++++++++++++++++++ ");
+		Iterable<CouponInfoDTO> couponinfolist = CouponInfoService.getCouponList();
+		
+		//List<GetTradeDTO> tradeList = tradeservice.getTradeDTOListFromTrade();
+		double couponTot=0;
+		logger.debug("Value of coupontot--->>>> "+ couponTot);
+		for(CouponInfoDTO couponinfo_element: couponinfolist) {
+			if(formdate.before(couponinfo_element.getCouponDates())) {
 			//logger.info("++++++++++++++++++++++++++ IN FOR LOOP +++++++++++++++++++++++++ ");
 			//int id = m.getPid();
 			String isin = couponinfo_element.getIsin();
@@ -183,6 +238,7 @@ public double TradeQuant(String isin) {
 			couponTot = couponTot + currentCoupon;
 			//logger.debug("Value of total coupon---->>>> "+ couponTot);
 		}
+		}
 		logger.debug("Value of total coupon---->>>> "+ couponTot);
 		return couponTot;
 
@@ -204,18 +260,18 @@ public double TradeQuant(String isin) {
 	public double getTradeQuant(String isin,Date couponDate) {
 		
 		List<GetTradeDTO> tradeList = tradeservice.getTradeDTOListFromTrade();
-		
+		HashMap<String,Double> hmap_quantity_local = new HashMap<String,Double>();
 		
 		
 		double quantfinal=0;
 		for(GetTradeDTO t: tradeList) {
 			//couponDate = mastersecurity.getCouponDate;
 			double quant=0;
-			double quant2=0;
+		
 			String isin2 = t.getIsin();
 			if(isin2.equals(isin)) {
-			if(hmap_quantity.containsKey(isin2)) {
-			quant = hmap_quantity.get(isin2);
+			if(hmap_quantity_local.containsKey(isin2)) {
+			quant = hmap_quantity_local.get(isin2);
 			}
 			GregorianCalendar d = t.getTradeDate();
 			Date dformat = d.getTime();
@@ -227,16 +283,15 @@ public double TradeQuant(String isin) {
 				quant = quant - t.getQuantity();	
 				}	
 				
-			hmap_quantity.put(isin2, quant);			
+			hmap_quantity.put(isin2, quant);
+			hmap_quantity_local.put(isin2, quant);
 		}
-			else {
-				quant2 = quant2 + t.getQuantity();
-			}
+			
 			
 		}
 		}
-			if(hmap_quantity.containsKey(isin)) {
-			quantfinal = hmap_quantity.get(isin);	
+			if(hmap_quantity_local.containsKey(isin)) {
+			quantfinal = hmap_quantity_local.get(isin);	
 			}
 		
 		return quantfinal;
@@ -258,6 +313,7 @@ public double TradeQuant(String isin) {
 		double openingsecquant =  OpeningSecQuant(isin2);
 		//logger.debug("Value of opensecq---->>>> "+ openingsecquant);
 		quant = quant + openingsecquant;
+		
 		//logger.debug("Value of quantity---->>>> "+ quant);
 		if(annual) {
 		coupon = faceValue*couponRate*0.01*quant;  //remove dcc
@@ -272,7 +328,7 @@ public double TradeQuant(String isin) {
 	}
 	
 	
-	public double fundsByDate() throws ParseException {
+	public double fundsByDate(Date formdate) throws ParseException {
 		//getting the data from database
 		//TradeService t = new TradeService();
 		List<GetTradeDTO> tradeData= tradeservice.getTradeDTOListFromTrade() ;
@@ -294,6 +350,79 @@ public double TradeQuant(String isin) {
 		double maturedGlobal=0;
 		
 		for(GetTradeDTO data : tradeData ) {
+		GregorianCalendar d = data.getTradeDate();
+		Date date = d.getTime();
+		if(date.before(formdate)) {
+				tradesPrice = data.getPrice();
+			tradesQuantity = data.getQuantity();
+			if(data.isBuy()) {
+				buyTrades = buyTrades + (tradesPrice*tradesQuantity);
+			}else {
+				sellTrades = sellTrades + (tradesPrice*tradesQuantity);
+			}
+			
+		}
+		}
+		
+		coupon = CalcCouponTotByDate(formdate);
+		logger.debug("Value of coupontot---->>>> "+ coupon);
+		for(MasterSecurityDTO m: masterSecurityList) {
+			maturedDate = m.getMaturityDate();
+			double matured=0;
+			double matured_facevalue=0;
+			
+ //		Date d1 = df.parse(maturedDate);
+//			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");//we have to check the format of the date
+//			Date d2 = df.parse("2021-03-31");
+		    //Date 1 occurs before Date 2
+		    if(maturedDate.before(formdate)) {
+		    	//principle value
+		    	String isin = m.getIsin();
+		    	double q =0;
+		    	matured_facevalue= m.getFaceValue();
+//		    	for(GetTradeDTO x : tradeData) {
+//		    		if(isin.equals(x.getIsin())) {
+//		    			q = q + x.getQuantity(); 
+//		    		}
+//		    	}
+		    	q = getFormQuant(maturedDate, isin); //call getformquant by date and isin
+		    	logger.debug("Value of final quant---->>>> "+ q);
+		    	matured= matured_facevalue*q;
+		    	logger.debug("Value of matured---->>>> "+ matured);
+		    }
+		    maturedGlobal= maturedGlobal + matured;
+		    logger.debug("Value of maturedfGlobal---->>>> "+ maturedGlobal);
+		         
+		}
+		
+		ans = initialBalance-buyTrades+sellTrades +coupon+maturedGlobal;
+		logger.debug("Value of ans---->>>> "+ ans);
+		return ans;
+	}
+	
+	public double finalfunds() throws ParseException {
+		//getting the data from database
+		//TradeService t = new TradeService();
+		List<GetTradeDTO> tradeData= tradeservice.getTradeDTOListFromTrade() ;
+	   //Changed datatype in mastersecurityservice
+		List<MasterSecurityDTO> masterSecurityList = mastersecurityservice.getMasterSecuritiesDTOList();;
+		
+		
+		double initialBalance  = (oService.getOpeningFunds()).getOpeningFunds();
+		
+
+		double ans = 0;
+		double buyTrades = 0;
+		double sellTrades = 0;
+		double tradesPrice = 0;
+		double tradesQuantity= 0;
+		
+		double coupon = 0;
+		Date maturedDate;
+		double maturedGlobal=0;
+		
+		for(GetTradeDTO data : tradeData ) {
+		 
 			tradesPrice = data.getPrice();
 			tradesQuantity = data.getQuantity();
 			if(data.isBuy()) {
@@ -302,6 +431,7 @@ public double TradeQuant(String isin) {
 				sellTrades = sellTrades + (tradesPrice*tradesQuantity);
 			}
 			
+		
 		}
 		
 		coupon = CalcCouponTot();
@@ -326,20 +456,24 @@ public double TradeQuant(String isin) {
 //		    		}
 //		    	}
 		    	q = finalSec(isin);
-		    	logger.debug("Value of final quant---->>>> "+ q);
+		    	//logger.debug("Value of final quant---->>>> "+ q);
 		    	matured= matured_facevalue*q;
-		    	logger.debug("Value of matured---->>>> "+ matured);
+		    	//logger.debug("Value of matured---->>>> "+ matured);
 		    }
 		    maturedGlobal= maturedGlobal + matured;
-		    logger.debug("Value of maturedfGlobal---->>>> "+ maturedGlobal);
+		    
 		         
 		}
 		
 		ans = initialBalance-buyTrades+sellTrades +coupon+maturedGlobal;
+		logger.debug("Value of buytrades---->>>> "+ buyTrades);
+		logger.debug("Value of coupon---->>>> "+ coupon);
+		logger.debug("Value of selltrades---->>>> "+ sellTrades);
+		logger.debug("Value of maturedfGlobal---->>>> "+ maturedGlobal);
+		logger.debug("Value of openingfunds--->>>> "+ initialBalance);
 		logger.debug("Value of ans---->>>> "+ ans);
 		return ans;
 	}
-	
 	
 //	public double finalfunds() throws ParseException {
 //		
@@ -625,7 +759,11 @@ public double unrealisedCouponSec(String isin,Date couponDate
 
 	double openingsecquant = 0;
 	if(hmap_quantity.containsKey(isin)) {
-		openingsecquant = hmap_quantity.get(isin);
+		//openingsecquant = hmap_quantity.get(isin);
+		openingsecquant = getTradeQuant(isin, couponDate);
+		if(OpeningSecQuant(isin)>0) {
+			openingsecquant = openingsecquant + OpeningSecQuant(isin);
+		}
 	}
 	quant = quant + openingsecquant;
 	DateFormat df = new SimpleDateFormat("yyyy-MM-dd");

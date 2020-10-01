@@ -11,12 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.citi.dto.CouponInfoDTO;
+import com.citi.dto.GetBalanceDTO;
 import com.citi.dto.GetTradeDTO;
 import com.citi.dto.OpeningSecurityDTO;
 import com.citi.dto.PortfolioDTO;
@@ -46,13 +48,13 @@ public class SummaryController {
 		return summaryservice.OpeningSecQuant("INF956O01016");
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, path="/tradequan")
-	public @ResponseBody double TradeQuan()  {
-		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
-		//Date d = new Date();
-		//return summaryservice.CalcCouponSec("INF021A01026", d, 1, 50000, 5.8, true);
-		return summaryservice.TradeQuant("INF204KB13C7");
-	}
+//	@RequestMapping(method = RequestMethod.GET, path="/tradequan")
+//	public @ResponseBody double TradeQuan()  {
+//		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
+//		//Date d = new Date();
+//		//return summaryservice.CalcCouponSec("INF021A01026", d, 1, 50000, 5.8, true);
+//		return summaryservice.TradeQuant("INF204KB13C7");
+//	}
 	
 	@RequestMapping(method = RequestMethod.GET, path="/tradequan1")
 	public @ResponseBody double getTradeQuan()  {
@@ -112,20 +114,14 @@ public class SummaryController {
 		
 	}
 	
-//	@RequestMapping(method = RequestMethod.GET, path="/finalfunds")
-//	public @ResponseBody double finalfunds() throws ParseException  {
-//		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
-//	
-//		return summaryservice.finalfunds();
-//		
-//	}
-	@RequestMapping(method = RequestMethod.GET, path="/fundsbydate")
-	public @ResponseBody double fundsByDate() throws ParseException  {
+
+	@RequestMapping(method = RequestMethod.GET, path="/finalfunds")
+	public @ResponseBody double finalfunds() throws ParseException  {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
-		//Date d = new Date();
-		return summaryservice.fundsByDate();
+		return summaryservice.finalfunds();
 		
 	}
+	
 	
 	@RequestMapping(method = RequestMethod.GET, path="/finalsec")
 	public @ResponseBody double finalsec() {
@@ -169,6 +165,26 @@ public class SummaryController {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
 	
 		return summaryservice.unrealisedProfitTot();
+		
+	}
+	
+	//Form Input Controllers
+	
+	@RequestMapping(method = RequestMethod.GET, path="/fundsbydate")
+	public @ResponseBody double fundsByDate(@RequestBody String date) throws ParseException  {
+		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
+		DateFormat df = new SimpleDateFormat("dd-MM-YYYY");
+		Date d = df.parse(date);
+		return summaryservice.fundsByDate(d);
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, path="/formquant")
+	public @ResponseBody double getFormQuant(@RequestBody GetBalanceDTO getBalance) throws ParseException  {
+		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
+		Date d =  getBalance.getTradeDate();
+		String isin = getBalance.getIsin();
+		return summaryservice.getFormQuant(d, isin);
 		
 	}
 	
