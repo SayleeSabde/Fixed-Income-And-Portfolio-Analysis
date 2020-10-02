@@ -1,8 +1,6 @@
 package com.citi.dto;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
-
 import com.citi.entity.Security;
 
 public class GetTradeDTO {

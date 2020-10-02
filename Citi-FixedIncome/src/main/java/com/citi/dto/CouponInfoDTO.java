@@ -4,9 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-
 public class CouponInfoDTO {
 	
 	private int id;

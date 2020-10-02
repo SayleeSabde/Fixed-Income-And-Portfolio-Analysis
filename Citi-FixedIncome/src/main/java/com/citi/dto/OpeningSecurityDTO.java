@@ -5,11 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import com.citi.entity.Security;
-
 public class OpeningSecurityDTO {
 	private String isin;
 	private String security;

@@ -3,11 +3,9 @@
  */
 package com.citi.servicetest;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.citi.entity.MasterSecurity;
 import com.citi.repository.MasterSecurityRepository;
 

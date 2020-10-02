@@ -6,14 +6,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-//import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
-
 import org.springframework.format.annotation.DateTimeFormat;
-//import com.citi.entity.MasterSecurity;
 
 
 @Entity
