@@ -13,12 +13,16 @@ public class OpeningFundsService {
 	@Autowired
 	OpeningFundsDTO openingFundsDTO;
 	
-	public OpeningFundsDTO getOpeningFunds() {
+	public OpeningFundsDTO getNewOpeningFunds() {
 		Random random = new Random();
 		Double funds = 50000000 + 4500000000.0 * random.nextDouble();
 		String factorString = String.format("%.2f", funds);
 		funds = Double.parseDouble(factorString);
 		openingFundsDTO.openingFunds = funds; 
+		return openingFundsDTO;
+	}
+	
+	public OpeningFundsDTO getOpeningFunds() { 
 		return openingFundsDTO;
 	}
 	 

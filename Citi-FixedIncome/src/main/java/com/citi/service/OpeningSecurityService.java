@@ -77,10 +77,15 @@ public class OpeningSecurityService {
 	}
 	
 	@Transactional
-	public Iterable<OpeningSecurityDTO> getOpeningSecurity() throws ParseException {
+	public Iterable<OpeningSecurityDTO> getNewOpeningSecurity() throws ParseException {
 		
 		openingSecurityRepository.deleteAll();
 		insertRandomOpeningSecurity();
+		return getOpeningSecurityDTOList();
+	}
+	
+	@Transactional
+	public Iterable<OpeningSecurityDTO> getOpeningSecurity() throws ParseException {
 		return getOpeningSecurityDTOList();
 	}
 	
