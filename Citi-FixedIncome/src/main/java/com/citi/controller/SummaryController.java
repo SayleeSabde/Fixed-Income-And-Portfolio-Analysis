@@ -9,30 +9,24 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.citi.dto.CouponInfoDTO;
-import com.citi.dto.GetBalanceDTO;
-import com.citi.dto.GetTradeDTO;
-import com.citi.dto.OpeningSecurityDTO;
 import com.citi.dto.PortfolioDTO;
 import com.citi.dto.ProfitDTO;
-import com.citi.service.CouponInfoService;
-//import com.citi.dto.GetTradeDTO;
 import com.citi.service.SummaryService;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/demo1")
 public class SummaryController {
 
-	@Autowired
-	private CouponInfoService CouponInfoService;
+//	@Autowired
+//	private CouponInfoService CouponInfoService;
 	
 	@Autowired
 	SummaryService summaryservice;
@@ -171,19 +165,19 @@ public class SummaryController {
 	//Form Input Controllers
 	
 	@RequestMapping(method = RequestMethod.GET, path="/fundsbydate")
-	public @ResponseBody double fundsByDate(@RequestBody String date) throws ParseException  {
+	public @ResponseBody double fundsByDate(@RequestParam String date) throws ParseException  {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
-		DateFormat df = new SimpleDateFormat("dd-MM-YYYY");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date d = df.parse(date);
 		return summaryservice.fundsByDate(d);
 		
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, path="/formquant")
-	public @ResponseBody double getFormQuant(@RequestBody GetBalanceDTO getBalance) throws ParseException  {
+	public @ResponseBody double getFormQuant(@RequestParam String date, @RequestParam String isin) throws ParseException  {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
-		Date d =  getBalance.getTradeDate();
-		String isin = getBalance.getIsin();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date d =  df.parse(date);
 		return summaryservice.getFormQuant(d, isin);
 		
 	}

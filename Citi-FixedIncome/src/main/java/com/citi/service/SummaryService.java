@@ -9,14 +9,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.citi.controller.TradeController;
 import com.citi.dto.BalanceDTO;
 import com.citi.dto.CouponInfoDTO;
 import com.citi.dto.GetTradeDTO;
@@ -25,10 +22,8 @@ import com.citi.dto.OpeningFundsDTO;
 import com.citi.dto.OpeningSecurityDTO;
 import com.citi.dto.PortfolioDTO;
 import com.citi.dto.ProfitDTO;
-import com.citi.entity.MasterSecurity;
-import com.citi.entity.OpeningSecurity;
-import com.citi.entity.Trade;
 import com.citi.repository.MasterSecurityRepository;
+
 @Service
 public class SummaryService {
 	@Autowired
@@ -132,6 +127,34 @@ public double TradeQuant(String isin) {
 	}
 
 	public double getFormQuant(Date input_date,String isin_form) {
+		
+		List<GetTradeDTO> tradeList = tradeservice.getTradeDTOListFromTrade();
+			double openingbalance = 0;
+				if(OpeningSecQuant(isin_form)>0) {
+					openingbalance = OpeningSecQuant(isin_form);
+				}
+				double formquant=openingbalance;
+		for(GetTradeDTO trade:tradeList) {
+			String isin = trade.getIsin();
+			GregorianCalendar d = trade.getTradeDate();
+			Date dformat = d.getTime();
+			if(dformat.before(input_date) && (isin.equals(isin_form))) {
+				
+				if(trade.isBuy()==true) {
+					formquant = formquant + trade.getQuantity() ;
+					}
+					else{	
+					formquant = formquant - trade.getQuantity();	
+					}
+				
+			}
+		}
+		
+		
+		return formquant;
+	}
+	
+public double getFormQuantforfunds(Date input_date,String isin_form) {
 		
 		List<GetTradeDTO> tradeList = tradeservice.getTradeDTOListFromTrade();
 			double openingbalance = 0;
@@ -385,7 +408,7 @@ public double TradeQuant(String isin) {
 //		    			q = q + x.getQuantity(); 
 //		    		}
 //		    	}
-		    	q = getFormQuant(maturedDate, isin); //call getformquant by date and isin
+		    	q = getFormQuantforfunds(maturedDate, isin); //call getformquant by date and isin
 		    	logger.debug("Value of final quant---->>>> "+ q);
 		    	matured= matured_facevalue*q;
 		    	logger.debug("Value of matured---->>>> "+ matured);
@@ -815,7 +838,7 @@ public double unrealisedCouponSec(String isin,Date couponDate
 
 public double unrealisedcouponSecByisin(String isin) throws ParseException {
 	double unrealisedcouponbysec;
-	double d = unrealisedCouponTot();
+	//double d = unrealisedCouponTot();
 	 if(hmap_coupon_unrealised.containsKey(isin)) {
 		 unrealisedcouponbysec = hmap_coupon_unrealised.get(isin);
 		 logger.debug("Value of total couponbysec---->>>> "+ unrealisedcouponbysec); 

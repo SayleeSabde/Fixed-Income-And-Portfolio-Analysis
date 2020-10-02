@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.citi.dto.MasterSecurityDTO;
 import com.citi.entity.MasterSecurity;
-import com.citi.main.CitiFixedIncomeApplication;
 import com.citi.repository.MasterSecurityRepository;
 
 /**

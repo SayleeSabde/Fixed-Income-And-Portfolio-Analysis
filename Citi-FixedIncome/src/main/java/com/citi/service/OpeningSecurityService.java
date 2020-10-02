@@ -17,12 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.citi.controller.OpeningSecurityController;
 import com.citi.dto.MasterSecurityDTO;
 import com.citi.dto.OpeningFundsDTO;
 import com.citi.dto.OpeningSecurityDTO;
-import com.citi.entity.MarketPrice;
-import com.citi.entity.MasterSecurity;
 import com.citi.entity.OpeningSecurity;
 import com.citi.repository.MarketPriceRepository;
 import com.citi.repository.MasterSecurityRepository;
@@ -113,7 +110,7 @@ public class OpeningSecurityService {
 		Random random = new Random();
 		int numberOfSecurities = 7 + random.nextInt(2);
 		Iterable<MasterSecurityDTO> masterSecurityDTOList = masterSecurityService.getMasterSecuritiesDTOList();
-		ArrayList<MasterSecurityDTO> masterSecList = new ArrayList();
+		ArrayList<MasterSecurityDTO> masterSecList = new ArrayList<MasterSecurityDTO>();
 		for (MasterSecurityDTO security : masterSecurityDTOList) {
 			masterSecList.add(security);
 		}
@@ -201,7 +198,7 @@ public class OpeningSecurityService {
 	public OpeningFundsDTO getOpeningFunds() {
 		OpeningFundsDTO openingFundsDTO = new OpeningFundsDTO();
 		Iterable<OpeningSecurity> openingSecurityList = openingSecurityRepository.findAll();
-		ArrayList<OpeningSecurity> openingSecList = new ArrayList();
+		ArrayList<OpeningSecurity> openingSecList = new ArrayList<OpeningSecurity>();
 		for (OpeningSecurity security : openingSecurityList) {
 			openingSecList.add(security);
 			break;
