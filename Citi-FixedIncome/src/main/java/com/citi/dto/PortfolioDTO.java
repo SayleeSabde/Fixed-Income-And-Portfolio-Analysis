@@ -15,8 +15,17 @@ public class PortfolioDTO {
 	private String isin;
 	private int balance;
 	private Date maturityDate;
+	private double finalValuation;
 	//private String realisedUnrealised;
 	
+	public double getFinalValuation() {
+		return finalValuation;
+	}
+
+	public void setFinalValuation(double finalValuation) {
+		this.finalValuation = finalValuation;
+	}
+
 	public PortfolioDTO() {
 		
 	}

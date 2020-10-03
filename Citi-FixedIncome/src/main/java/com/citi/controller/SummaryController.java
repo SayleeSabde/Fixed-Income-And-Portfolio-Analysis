@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +26,6 @@ import com.citi.service.SummaryService;
 @RequestMapping("/demo1")
 public class SummaryController {
 
-//	@Autowired
-//	private CouponInfoService CouponInfoService;
 	
 	@Autowired
 	SummaryService summaryservice;
@@ -42,13 +41,6 @@ public class SummaryController {
 		return summaryservice.OpeningSecQuant("INF956O01016");
 	}
 	
-//	@RequestMapping(method = RequestMethod.GET, path="/tradequan")
-//	public @ResponseBody double TradeQuan()  {
-//		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
-//		//Date d = new Date();
-//		//return summaryservice.CalcCouponSec("INF021A01026", d, 1, 50000, 5.8, true);
-//		return summaryservice.TradeQuant("INF204KB13C7");
-//	}
 	
 	@RequestMapping(method = RequestMethod.GET, path="/tradequan1")
 	public @ResponseBody double getTradeQuan()  {
@@ -68,7 +60,7 @@ public class SummaryController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, path="/coupontot")
-	public @ResponseBody double CalcCouponTot()  {
+	public @ResponseBody double CalcCouponTot() throws ParseException  {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
 	
 		return summaryservice.CalcCouponTot();
@@ -126,7 +118,7 @@ public class SummaryController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, path="/couponbyisin")
-	public @ResponseBody double couponSecByisin() {
+	public @ResponseBody double couponSecByisin() throws ParseException {
 		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
 	
 		return summaryservice.couponSecByisin("INF758T01015");
@@ -162,7 +154,17 @@ public class SummaryController {
 		
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, path="/finalfundshmap")
+	public @ResponseBody  TreeMap<Date, Double> finalfunds_hmap() throws ParseException  {
+		logger.debug("++++++++++++++++++++++Debug++++++++++++++++++++++++++++++++++++++++++");
+	
+		return summaryservice.fundsbydate_hmap();
+		
+	}
+	
+	
 	//Form Input Controllers
+	
 	
 	@RequestMapping(method = RequestMethod.GET, path="/fundsbydate")
 	public @ResponseBody double fundsByDate(@RequestParam String date) throws ParseException  {
